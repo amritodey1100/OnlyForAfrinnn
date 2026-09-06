@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#FF6FA0" />
+    <title>Happy Birthday, Afrin! 🎈</title>
+
+    <!--
+  MADE FOR AFRIN'S 18TH BIRTHDAY 🩷
+
+  Quick edit guide before you send this:
+  1. Your message — inside <div class="note">, edit both paragraphs in
+     .note-text and the P.S. line. Make it yours.
+  2. Music — drop an mp3 in the same folder as this file, then change
+     <audio id="bgm" src="your-song.mp3"> near the bottom of <body>
+     to your file's name. If you don't add a file, the music button
+     quietly hides itself instead of sitting there broken.
+  3. Colors — tweak the values inside :root at the top of the CSS.
+-->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Quicksand:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --cream: #fff6ec;
+        --blush: #ffe9f2;
+        --lilac-wash: #f1e8ff;
+        --pink: #ff6fa0;
+        --pink-deep: #e24e82;
+        --yellow: #ffc857;
+        --lilac: #b892ff;
+        --plum: #3a2547;
+        --white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family: "Quicksand", system-ui, sans-serif;
+        color: var(--plum);
+        background: linear-gradient(
+          160deg,
+          var(--cream) 0%,
+          var(--blush) 55%,
+          var(--lilac-wash) 100%
+        );
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      button {
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        background: none;
+        touch-action: manipulation;
+      }
+
+      button:focus-visible {
+        outline: 3px solid var(--lilac);
+        outline-offset: 3px;
+        border-radius: 8px;
+      }
+
+      .stage {
+        position: relative;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow: hidden;
+      }
+
+      /* ---------- Ambient background glow ---------- */
+      .ambient-glow {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .glow-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.35;
+      }
+
+      .glow-blob--1 {
+        width: 240px;
+        height: 240px;
+        top: -60px;
+        left: -60px;
+        background: var(--pink);
+      }
+      .glow-blob--2 {
+        width: 260px;
+        height: 260px;
+        bottom: -80px;
+        right: -60px;
+        background: var(--lilac);
+      }
+      .glow-blob--3 {
+        width: 180px;
+        height: 180px;
+        top: 40%;
+        left: 60%;
+        background: var(--yellow);
+        opacity: 0.25;
+      }
+
+      /* ---------- Balloons ---------- */
+      .balloons {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .balloon {
+        position: absolute;
+        bottom: -6%;
+        width: 46px;
+        height: 58px;
+        background: var(--balloon-color, var(--pink));
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        animation: bob 5s ease-in-out infinite;
+        opacity: 0.85;
+      }
+
+      .balloon::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        width: 1px;
+        height: 70px;
+        background: rgba(58, 37, 71, 0.25);
+      }
+
+      .balloon::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 96%;
+        width: 6px;
+        height: 6px;
+        transform: translateX(-50%) rotate(45deg);
+        background: var(--balloon-color, var(--pink));
+      }
+
+      @keyframes bob {
+        0%,
+        100% {
+          transform: translateY(0) rotate(-3deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(3deg);
+        }
+      }
+
+      /* ---------- Cover & scene ---------- */
+      .cover,
+      .scene {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem 1.25rem;
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+
+      .scene {
+        opacity: 0;
+        transform: scale(0.96);
+        pointer-events: none;
+        overflow-y: auto;
+      }
+
+      .cover.hidden {
+        opacity: 0;
+        transform: scale(1.04);
+        pointer-events: none;
+      }
+
+      .scene.visible {
+        opacity: 1;
+        transform: scale(1);
+        pointer-events: auto;
+      }
+
+      .cover-emoji {
+        font-size: 2.4rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .cover-title {
+        font-family: "Baloo 2", cursive;
+        font-weight: 700;
+        font-size: clamp(1.7rem, 6vw, 2.8rem);
+        line-height: 1.25;
+        margin: 0 0 2rem;
+        max-width: 16ch;
+      }
+
+      .open-btn {
+        background: var(--pink);
+        color: var(--white);
+        font-family: "Baloo 2", cursive;
+        font-weight: 600;
+        font-size: 1.1rem;
+        padding: 0.9rem 2.1rem;
+        border-radius: 999px;
+        box-shadow: 0 10px 24px rgba(226, 78, 130, 0.35);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .open-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 28px rgba(226, 78, 130, 0.4);
+      }
+
+      .open-btn:active {
+        transform: translateY(0);
+      }
+
+      .headline {
+        font-family: "Baloo 2", cursive;
+        font-weight: 800;
+        font-size: clamp(1.8rem, 7vw, 3.2rem);
+        margin: 0;
+      }
+
+      .milestone {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--pink-deep);
+        opacity: 0.85;
+        margin: 0.5rem 0 0;
+      }
+
+      .subline {
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--plum);
+        opacity: 0.75;
+        margin: 0.6rem 0 1.8rem;
+        min-height: 1.4em;
+      }
+
+      /* ---------- Cake ---------- */
+      .cake {
+        position: relative;
+        margin: 4.5rem auto 2rem;
+        width: 220px;
+      }
+
+      .cake__plate {
+        width: 100%;
+        height: 16px;
+        background: var(--white);
+        border-radius: 50%;
+        box-shadow: 0 6px 14px rgba(58, 37, 71, 0.12);
+      }
+
+      .cake__tier {
+        position: relative;
+        margin-top: -6px;
+        height: 74px;
+        background: var(--pink);
+        border-radius: 14px 14px 8px 8px;
+      }
+
+      .cake__frosting {
+        position: absolute;
+        top: -18px;
+        left: 6px;
+        right: 6px;
+        height: 32px;
+        background: var(--lilac);
+        border-radius: 16px 16px 6px 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: box-shadow 0.4s ease;
+        z-index: 1;
+      }
+
+      .scene.visible .cake__frosting {
+        box-shadow: 0 0 22px rgba(255, 255, 255, 0.7);
+      }
+
+      .cake__number {
+        font-family: "Baloo 2", cursive;
+        font-weight: 800;
+        font-size: 1.3rem;
+        color: var(--white);
+        letter-spacing: 1px;
+      }
+
+      .cake__candles {
+        position: absolute;
+        top: -70px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        z-index: 2;
+      }
+
+      .candle {
+        position: relative;
+        width: 44px;
+        height: 56px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+
+      .candle__stick {
+        width: 10px;
+        height: 30px;
+        background: repeating-linear-gradient(
+          180deg,
+          var(--yellow) 0 6px,
+          var(--white) 6px 12px
+        );
+        border-radius: 3px;
+      }
+
+      .flame {
+        position: absolute;
+        left: 50%;
+        bottom: 30px;
+        width: 11px;
+        height: 18px;
+        transform: translateX(-50%);
+        background: radial-gradient(
+          circle at 50% 30%,
+          #fff3b0,
+          var(--yellow) 55%,
+          #ff8a4c 100%
+        );
+        border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
+        box-shadow: 0 0 14px rgba(255, 200, 87, 0.7);
+        animation: flicker 1.3s ease-in-out infinite alternate;
+        transform-origin: bottom center;
+      }
+
+      @keyframes flicker {
+        0% {
+          transform: translateX(-50%) scale(1) rotate(-3deg);
+        }
+        100% {
+          transform: translateX(-50%) scale(1.1) rotate(3deg);
+        }
+      }
+
+      .candle.blown .flame {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .candle .smoke {
+        position: absolute;
+        left: 50%;
+        bottom: 48px;
+        width: 4px;
+        height: 4px;
+        background: rgba(58, 37, 71, 0.25);
+        border-radius: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+      }
+
+      .candle.blown .smoke {
+        animation: puff 0.9s ease-out forwards;
+      }
+
+      @keyframes puff {
+        0% {
+          opacity: 0.6;
+          transform: translateX(-50%) translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(-50%) translateY(-24px) scale(2.4);
+        }
+      }
+
+      /* ---------- Note ---------- */
+      .note {
+        background: var(--white);
+        width: 100%;
+        max-width: 420px;
+        padding: 1.6rem 1.7rem;
+        border-radius: 14px;
+        box-shadow: 0 16px 30px rgba(58, 37, 71, 0.14);
+        transform: rotate(-1.5deg) translateY(16px);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+
+      .note.revealed {
+        opacity: 1;
+        transform: rotate(-1.5deg) translateY(0);
+        pointer-events: auto;
+      }
+
+      .note-text {
+        font-size: 1.02rem;
+        line-height: 1.6;
+        margin: 0 0 0.9rem;
+        text-align: left;
+      }
+
+      .note-ps {
+        font-size: 0.92rem;
+        line-height: 1.5;
+        color: var(--pink-deep);
+        text-align: left;
+        margin: 0 0 1.1rem;
+      }
+
+      .note-signature {
+        font-family: "Baloo 2", cursive;
+        font-weight: 700;
+        text-align: right;
+        color: var(--pink-deep);
+        margin: 0;
+      }
+
+      /* ---------- Music toggle ---------- */
+      .music-btn {
+        position: fixed;
+        right: calc(1.1rem + env(safe-area-inset-right));
+        bottom: calc(1.1rem + env(safe-area-inset-bottom));
+        z-index: 6;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--white);
+        box-shadow: 0 8px 20px rgba(58, 37, 71, 0.18);
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* ---------- Confetti ---------- */
+      .confetti-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .confetti-piece {
+        position: absolute;
+        top: -5%;
+        width: 8px;
+        height: 14px;
+        border-radius: 2px;
+        animation-name: confetti-fall;
+        animation-timing-function: ease-in;
+        animation-fill-mode: forwards;
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(105vh) rotate(560deg);
+          opacity: 0.85;
+        }
+      }
+
+      /* ---------- Responsive ---------- */
+      @media (max-width: 480px) {
+        .cover,
+        .scene {
+          padding: 1.5rem 1rem;
+        }
+        .note {
+          padding: 1.3rem 1.4rem;
+        }
+        .cake {
+          width: 190px;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .cake {
+          width: 160px;
+          margin-bottom: 1.6rem;
+        }
+        .cake__candles {
+          gap: 10px;
+          top: -64px;
+        }
+        .candle {
+          width: 38px;
+        }
+        .cover-title {
+          font-size: clamp(1.5rem, 7.5vw, 2rem);
+        }
+        .note {
+          padding: 1.1rem 1.2rem;
+        }
+        .note-text {
+          font-size: 0.96rem;
+        }
+      }
+
+      @media (max-height: 620px) {
+        .cake {
+          margin-bottom: 1.2rem;
+        }
+        .subline {
+          margin-bottom: 1rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .balloon,
+        .flame {
+          animation: none !important;
+        }
+        .confetti-piece {
+          display: none !important;
+        }
+        .cover,
+        .scene,
+        .note,
+        .open-btn,
+        .cake__frosting {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage" id="stage">
+      <div class="ambient-glow" aria-hidden="true">
+        <div class="glow-blob glow-blob--1"></div>
+        <div class="glow-blob glow-blob--2"></div>
+        <div class="glow-blob glow-blob--3"></div>
+      </div>
+
+      <div class="balloons" id="balloons" aria-hidden="true"></div>
+
+      <section class="cover" id="cover">
+        <div class="cover-emoji">🎈🎁🎈</div>
+        <h1 class="cover-title">A little something for Afrin</h1>
+        <button class="open-btn" id="openBtn">Tap to open 🎁</button>
+      </section>
+
+      <section class="scene" id="scene" aria-hidden="true">
+        <h1 class="headline">Happy Birthday, Afrin!</h1>
+        <p class="milestone">September 7 · officially 18 today 🎉</p>
+        <p class="subline" id="hint">Make a wish and blow out the candles 🕯️</p>
+
+        <div class="cake">
+          <div class="cake__candles">
+            <button
+              class="candle"
+              id="candle1"
+              aria-label="Blow out first candle"
+            >
+              <span class="candle__stick"></span>
+              <span class="flame"></span>
+              <span class="smoke"></span>
+            </button>
+            <button
+              class="candle"
+              id="candle2"
+              aria-label="Blow out second candle"
+            >
+              <span class="candle__stick"></span>
+              <span class="flame"></span>
+              <span class="smoke"></span>
+            </button>
+          </div>
+          <div class="cake__frosting">
+            <span class="cake__number">18</span>
+          </div>
+          <div class="cake__tier"></div>
+          <div class="cake__plate"></div>
+        </div>
+
+        <div class="note" id="note">
+          <!-- EDIT BOTH PARAGRAPHS AND THE P.S. LINE WITH YOUR OWN WORDS -->
+          <p class="note-text">
+            Dear Afrin, happy 18th birthday! I hope this year hands you
+            everything you've been quietly working towards, plus a few good
+            surprises you never saw coming.
+          </p>
+          <p class="note-text">
+            Thank you for being exactly who you are — today's entirely about
+            celebrating that. Here's to eighteen and everything it's about to
+            bring you.
+          </p>
+          <p class="note-ps">
+            P.S. — this whole page took me way too many hours. Worth it.
+          </p>
+          <p class="note-signature">— Amrito</p>
+        </div>
+      </section>
+
+      <button class="music-btn" id="musicBtn" aria-label="Toggle music">
+        🔈
+      </button>
+      <!-- Add your own mp3 in this folder and point src to it -->
+      <audio id="bgm" src="your-song.mp3" loop></audio>
+    </div>
+
+    <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+
+    <script>
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      // ---- Balloons ----
+      const balloonColors = ["#FF6FA0", "#FFC857", "#B892FF", "#3A2547"];
+      const balloonLayer = document.getElementById("balloons");
+      const balloonCount = 8;
+      for (let i = 0; i < balloonCount; i++) {
+        const b = document.createElement("div");
+        b.className = "balloon";
+        b.style.left = 4 + Math.random() * 86 + "%";
+        b.style.setProperty(
+          "--balloon-color",
+          balloonColors[i % balloonColors.length],
+        );
+        b.style.animationDelay = Math.random() * 3 + "s";
+        b.style.animationDuration = 4 + Math.random() * 2.5 + "s";
+        b.style.width = 36 + Math.random() * 16 + "px";
+        b.style.height = 46 + Math.random() * 20 + "px";
+        balloonLayer.appendChild(b);
+      }
+
+      // ---- Confetti ----
+      const confettiColors = ["#FF6FA0", "#FFC857", "#B892FF", "#3A2547"];
+      const confettiLayer = document.getElementById("confettiLayer");
+      function spawnConfetti(count) {
+        if (reduceMotion) return;
+        for (let i = 0; i < count; i++) {
+          const piece = document.createElement("div");
+          piece.className = "confetti-piece";
+          piece.style.left = Math.random() * 100 + "%";
+          piece.style.background =
+            confettiColors[Math.floor(Math.random() * confettiColors.length)];
+          piece.style.animationDuration = 2.4 + Math.random() * 1.6 + "s";
+          piece.style.animationDelay = Math.random() * 0.5 + "s";
+          confettiLayer.appendChild(piece);
+          piece.addEventListener("animationend", () => piece.remove());
+        }
+      }
+
+      // ---- Cover -> scene transition ----
+      const cover = document.getElementById("cover");
+      const scene = document.getElementById("scene");
+      const openBtn = document.getElementById("openBtn");
+      const bgm = document.getElementById("bgm");
+      const musicBtn = document.getElementById("musicBtn");
+
+      // Hide the music button quietly if no playable audio source was added yet
+      bgm.addEventListener("error", () => {
+        musicBtn.style.display = "none";
+      });
+
+      openBtn.addEventListener("click", () => {
+        cover.classList.add("hidden");
+        cover.setAttribute("aria-hidden", "true");
+        scene.classList.add("visible");
+        scene.setAttribute("aria-hidden", "false");
+
+        bgm
+          .play()
+          .then(() => {
+            musicBtn.textContent = "🔊";
+          })
+          .catch(() => {
+            musicBtn.textContent = "🔈";
+          });
+      });
+
+      musicBtn.addEventListener("click", () => {
+        if (bgm.paused) {
+          bgm.play();
+          musicBtn.textContent = "🔊";
+        } else {
+          bgm.pause();
+          musicBtn.textContent = "🔈";
+        }
+      });
+
+      // ---- Candles ----
+      const candles = [
+        document.getElementById("candle1"),
+        document.getElementById("candle2"),
+      ];
+      const note = document.getElementById("note");
+      const hint = document.getElementById("hint");
+      let blownCount = 0;
+      let revealed = false;
+
+      candles.forEach((candle) => {
+        candle.addEventListener("click", () => {
+          if (candle.classList.contains("blown")) return;
+          candle.classList.add("blown");
+          blownCount++;
+
+          if (blownCount === candles.length && !revealed) {
+            revealed = true;
+            hint.textContent = "Wish sent 💫";
+            note.classList.add("revealed");
+            spawnConfetti(90);
+            note.scrollIntoView({
+              behavior: reduceMotion ? "auto" : "smooth",
+              block: "center",
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
